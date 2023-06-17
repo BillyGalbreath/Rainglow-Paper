@@ -29,12 +29,16 @@ public abstract class ColorableEntity {
             this.entity.getEntityData().define(getKey(), getDefaultColor().toString());
             this.entity.getEntityData().registrationLocked = true;
         }
-        this.entity.getEntityData().set(getKey(), this.bukkit.getPersistentDataContainer().getOrDefault(PDC_COLOR, PersistentDataType.STRING, Color.random().getName()));
+        setColor(this.bukkit.getPersistentDataContainer().getOrDefault(PDC_COLOR, PersistentDataType.STRING, Color.random().getName()));
     }
 
     public void setColor(Color color) {
-        this.entity.getEntityData().set(getKey(), color.getName());
-        this.bukkit.getPersistentDataContainer().set(PDC_COLOR, PersistentDataType.STRING, color.getName());
+        setColor(color.getName());
+    }
+
+    public void setColor(String color) {
+        this.entity.getEntityData().set(getKey(), color);
+        this.bukkit.getPersistentDataContainer().set(PDC_COLOR, PersistentDataType.STRING, color);
     }
 
     public boolean canColor(Player player) {
