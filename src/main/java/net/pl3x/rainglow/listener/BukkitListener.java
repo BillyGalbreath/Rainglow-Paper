@@ -33,18 +33,24 @@ public final class BukkitListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (!entity.canColor(player)) {
-            entity.resetColor();
-            return; // player not allowed to color this entity
-        }
-
         Dye dye = Dye.get(player);
         if (dye == null) {
-            entity.resetColor();
             return; // player not holding valid dye item
         }
 
-        if (!dye.getColor().canUse(player)) {
+        if (entity.getColor() == dye.getColor()) {
+            return; // mob is already this color
+        }
+
+        if (!entity.canColor(player)) {
+            entity.resetColor();
+            if (Config.ENTITY_NOT_ALLOWED != null && !Config.ENTITY_NOT_ALLOWED.isBlank()) {
+                player.sendMessage(MiniMessage.miniMessage().deserialize(Config.ENTITY_NOT_ALLOWED));
+            }
+            return; // player not allowed to color this entity
+        }
+
+        if (!dye.getColor().canUse(player, entity)) {
             entity.resetColor();
             if (Config.COLOR_NOT_ALLOWED != null && !Config.COLOR_NOT_ALLOWED.isBlank()) {
                 player.sendMessage(MiniMessage.miniMessage().deserialize(Config.COLOR_NOT_ALLOWED));

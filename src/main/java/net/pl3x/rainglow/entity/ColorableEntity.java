@@ -1,7 +1,6 @@
 package net.pl3x.rainglow.entity;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.pl3x.rainglow.configuration.Config;
 import net.pl3x.rainglow.util.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
@@ -20,9 +19,11 @@ public abstract class ColorableEntity {
         this.entity = ((CraftEntity) entity).getHandle();
     }
 
-    protected abstract Color getDefaultColor();
+    public abstract Color getDefaultColor();
 
     protected abstract EntityDataAccessor<String> getKey();
+
+    public abstract Color.Mode getColorMode(boolean dye);
 
     public void register() {
         if (!this.entity.getEntityData().hasItem(getKey())) {
@@ -30,7 +31,12 @@ public abstract class ColorableEntity {
             this.entity.getEntityData().define(getKey(), getDefaultColor().toString());
             this.entity.getEntityData().registrationLocked = true;
         }
-        setColor(getPDCColor(Config.COLOR_MODE.random()));
+        Color color = getColorMode(false).random();
+        setColor(getPDCColor(color == null ? getDefaultColor() : color));
+    }
+
+    public Color getColor() {
+        return Color.get(this.entity.getEntityData().get(getKey()));
     }
 
     public void setColor(Color color) {

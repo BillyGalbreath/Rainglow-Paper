@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import net.pl3x.rainglow.configuration.Config;
+import net.pl3x.rainglow.entity.ColorableEntity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -48,24 +48,34 @@ public enum Color {
         return this.name;
     }
 
-    public boolean canUse(Player player) {
-        return Config.COLOR_MODE.colors.contains(this) &&
+    public boolean canUse(Player player, ColorableEntity entity) {
+        List<Color> colors = new ArrayList<>(entity.getColorMode(true).colors);
+        if (colors.isEmpty()) {
+            colors.add(entity.getDefaultColor());
+        }
+        return colors.contains(this) &&
                 (player.hasPermission("rainglow.color.*") ||
                         player.hasPermission("rainglow.color." + getName()));
     }
 
     private static final Map<Material, Color> BY_MAT = new HashMap<>();
+    private static final Map<String, Color> BY_NAME = new HashMap<>();
 
     static {
         for (Color color : values()) {
             if (color.mat != null) {
                 BY_MAT.put(color.mat, color);
+                BY_NAME.put(color.name, color);
             }
         }
     }
 
     public static Color get(Material mat) {
         return BY_MAT.get(mat);
+    }
+
+    public static Color get(String name) {
+        return BY_NAME.get(name);
     }
 
     public enum Mode {
@@ -81,7 +91,7 @@ public enum Color {
         PAN_PRIDE(PINK, YELLOW, BLUE),
         RAINBOW(RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, PURPLE),
         TRANS_PRIDE(BLUE, WHITE, PINK),
-        VANILLA(BLUE);
+        VANILLA();
 
         private static final Map<String, Mode> BY_NAME = new HashMap<>();
 
@@ -101,6 +111,9 @@ public enum Color {
         }
 
         public Color random() {
+            if (this.colors.isEmpty()) {
+                return null;
+            }
             return this.colors.get(ThreadLocalRandom.current().nextInt(this.colors.size()));
         }
 
