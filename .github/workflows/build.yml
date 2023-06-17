@@ -22,4 +22,3 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
-        continue-on-error: true
