@@ -1,6 +1,7 @@
 package net.pl3x.rainglow.entity;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.pl3x.rainglow.configuration.Config;
 import net.pl3x.rainglow.util.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
@@ -29,7 +30,7 @@ public abstract class ColorableEntity {
             this.entity.getEntityData().define(getKey(), getDefaultColor().toString());
             this.entity.getEntityData().registrationLocked = true;
         }
-        setColor(this.bukkit.getPersistentDataContainer().getOrDefault(PDC_COLOR, PersistentDataType.STRING, Color.random().getName()));
+        setColor(getPDCColor(Config.COLOR_MODE.random()));
     }
 
     public void setColor(Color color) {
@@ -38,11 +39,29 @@ public abstract class ColorableEntity {
 
     public void setColor(String color) {
         this.entity.getEntityData().set(getKey(), color);
-        this.bukkit.getPersistentDataContainer().set(PDC_COLOR, PersistentDataType.STRING, color);
+        setPDCColor(color);
+    }
+
+    public void resetColor() {
+        String color = getPDCColor();
+        setColor("");
+        setColor(color);
     }
 
     public boolean canColor(Player player) {
         return player.hasPermission("rainglow.entity.*");
+    }
+
+    private String getPDCColor() {
+        return getPDCColor(getDefaultColor());
+    }
+
+    private String getPDCColor(Color def) {
+        return this.bukkit.getPersistentDataContainer().getOrDefault(PDC_COLOR, PersistentDataType.STRING, def.getName());
+    }
+
+    private void setPDCColor(String color) {
+        this.bukkit.getPersistentDataContainer().set(PDC_COLOR, PersistentDataType.STRING, color);
     }
 
     public static ColorableEntity get(Entity entity) {

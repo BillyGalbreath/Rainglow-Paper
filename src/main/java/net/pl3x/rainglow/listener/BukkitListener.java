@@ -1,7 +1,9 @@
 package net.pl3x.rainglow.listener;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.rainglow.Rainglow;
+import net.pl3x.rainglow.configuration.Config;
 import net.pl3x.rainglow.entity.ColorableEntity;
 import net.pl3x.rainglow.util.Dye;
 import org.bukkit.Bukkit;
@@ -32,15 +34,21 @@ public final class BukkitListener implements Listener {
 
         Player player = event.getPlayer();
         if (!entity.canColor(player)) {
+            entity.resetColor();
             return; // player not allowed to color this entity
         }
 
         Dye dye = Dye.get(player);
         if (dye == null) {
+            entity.resetColor();
             return; // player not holding valid dye item
         }
 
         if (!dye.getColor().canUse(player)) {
+            entity.resetColor();
+            if (Config.COLOR_NOT_ALLOWED != null && !Config.COLOR_NOT_ALLOWED.isBlank()) {
+                player.sendMessage(MiniMessage.miniMessage().deserialize(Config.COLOR_NOT_ALLOWED));
+            }
             return; // player not allowed to use this color
         }
 
