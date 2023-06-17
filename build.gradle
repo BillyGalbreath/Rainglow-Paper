@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.papermc.paperweight.userdev' version "1.5.5"
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 defaultTasks 'build'
@@ -60,3 +61,20 @@ processResources {
         )
     }
 }
+
+modrinth {
+    autoAddDependsOn = false
+    token = System.getenv('MODRINTH_TOKEN')
+    projectId = 'rainglow-paper'
+    versionName = "${project.version}"
+    versionNumber = "${project.version}"
+    versionType = 'release'
+    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
+    gameVersions.addAll(["${minecraftVersion}"])
+    loaders.addAll(['paper', 'purpur'])
+    changelog = System.getenv('COMMIT_MESSAGE')
+    dependencies {
+        required.project "rainglow"
+    }
+}
+
