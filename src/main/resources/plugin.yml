@@ -1,0 +1,103 @@
+name: "${name}"
+main: "${group}.Rainglow"
+version: "${version}"
+api-version: "1.20"
+authors: ${authors}
+description: "${description}"
+website: "${website}"
+
+permissions:
+  rainglow.*:
+    description: Gives access to change all entities and all colors
+    default: op
+    children:
+      rainglow.entity.*: true
+      rainglow.color.*: true
+
+  rainglow.entity.*:
+    description: Gives access to change all entity's colors
+    default: op
+    children:
+      rainglow.allay: true
+      rainglow.glow_squid: true
+      rainglow.slime: true
+
+  rainglow.entity.allay:
+    description: Gives access to change allay colors
+    default: op
+  rainglow.entity.glow_squid:
+    description: Gives access to change glow squid colors
+    default: op
+  rainglow.entity.slime:
+    description: Gives access to change slime colors
+    default: op
+
+  rainglow.color.*:
+    description: Gives access to change entity colors
+    default: op
+    children:
+      rainglow.color.black: true
+      rainglow.color.blue: true
+      rainglow.color.brown: true
+      rainglow.color.cyan: true
+      rainglow.color.green: true
+      rainglow.color.gray: true
+      rainglow.color.light_blue: true
+      rainglow.color.light_gray: true
+      rainglow.color.lime: true
+      rainglow.color.magenta: true
+      rainglow.color.orange: true
+      rainglow.color.pink: true
+      rainglow.color.purple: true
+      rainglow.color.red: true
+      rainglow.color.white: true
+      rainglow.color.yellow: true
+
+  rainglow.color.black:
+    description: Gives access to change to black
+    default: op
+  rainglow.color.blue:
+    description: Gives access to change to blue
+    default: op
+  rainglow.color.brown:
+    description: Gives access to change to brown
+    default: op
+  rainglow.color.cyan:
+    description: Gives access to change to cyan
+    default: op
+  rainglow.color.green:
+    description: Gives access to change to green
+    default: op
+  rainglow.color.gray:
+    description: Gives access to change to gray
+    default: op
+  rainglow.color.light_blue:
+    description: Gives access to change to light blue
+    default: op
+  rainglow.color.light_gray:
+    description: Gives access to change to light gray
+    default: op
+  rainglow.color.lime:
+    description: Gives access to change to lime
+    default: op
+  rainglow.color.magenta:
+    description: Gives access to change to magenta
+    default: op
+  rainglow.color.orange:
+    description: Gives access to change to orange
+    default: op
+  rainglow.color.pink:
+    description: Gives access to change to pink
+    default: op
+  rainglow.color.purple:
+    description: Gives access to change to purple
+    default: op
+  rainglow.color.red:
+    description: Gives access to change to red
+    default: op
+  rainglow.color.white:
+    description: Gives access to change to white
+    default: op
+  rainglow.color.yellow:
+    description: Gives access to change to yellow
+    default: op

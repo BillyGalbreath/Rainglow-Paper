@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'io.papermc.paperweight.userdev' version "1.5.5"
+}
+
+defaultTasks 'build'
+
+def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
+project.group = 'net.pl3x.rainglow'
+project.version = "$minecraftVersion-$buildNum"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$minecraftVersion-R0.1-SNAPSHOT")
+}
+
+base {
+    archivesName = "${rootProject.name}-${project.name}"
+}
+
+assemble {
+    dependsOn reobfJar
+    doLast {
+        delete fileTree("$buildDir").include('**/*-dev*.jar')
+    }
+}
+
+reobfJar {
+    outputJar = file("$buildDir/libs/${rootProject.name}-${project.version}.jar")
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.release.set(17)
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand(
+                'name': rootProject.name,
+                'group': project.group,
+                'version': project.version,
+                'authors': authors,
+                'description': project.properties['description'],
+                'website': website
+        )
+    }
+}
